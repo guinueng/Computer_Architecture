@@ -10,56 +10,59 @@ newline: .asciiz "\n" # Newline string
 main:
     add $s0 $zero $zero # Set int cnt as 0.
 
-    # Print "The index for the Fibonacci sequence: "
-    li $v0, 4 # syscall for print_string
-    la $a0, prompt # Load address of prompt
+    # Print "The index for the Fibonacci sequence: ".
+    li $v0, 4 # syscall for print_string.
+    la $a0, prompt # Load address of prompt.
     syscall
 
-    # Read integer input (n)
-    li $v0, 5 # syscall for read_int
+    # Read integer input (n).
+    li $v0, 5 # syscall for read_integer.
     syscall
-    move $a0, $v0 # Move input (n) to $a0 for fibonacci call
+    move $a0, $v0 # Move input (n) to $a0 for fibonacci call.
 
-    # Call fibonacci function
-    jal fibonacci # Call fibonacci(n)
+    # Call fibonacci function.
+    jal fibonacci # Call fibonacci(n).
     move $s1, $v0 # Move result to $s2 to store fibonacci number.
 
-    # Print "Fibonacci number: "
-    li $v0, 4 # syscall for print_string
-    la $a0, fib_result # Load address of fib_result
+    # Print "Fibonacci number: ".
+    li $v0, 4 # syscall for print_string.
+    la $a0, fib_result # Load address of fib_result.
     syscall
 
-    # Print fibonacci number
+    # Print fibonacci number.
     move $a0, $s1 # Move result to $a0 to print fibonacci number.
-    li $v0, 1 # syscall for print_integer
+    li $v0, 1 # syscall for print_integer.
     syscall
 
-    # Print "The number of fibonacci function calls: "
-    li $v0, 4 # syscall for print_string
-    la $a0, call_count # Load address of call_count
+    # Print "The number of fibonacci function calls: ".
+    li $v0, 4 # syscall for print_string.
+    la $a0, newline # Load address of newline.
+    syscall
+    la $a0, call_count # Load address of call_count.
     syscall
 
-    # Print number of fibonacci function calls
-    li $v0, 1 # syscall for print_integer
+    # Print number of fibonacci function calls.
+    li $v0, 1 # syscall for print_integer.
     move $a0, $s0
     syscall
 
-    # Exit program
-    li $v0, 10 # syscall for exit
+    # Exit program.
+    li $v0, 10 # syscall for exit.
     syscall
 
 fibonacci:
     addi $sp, $sp, -8 # Allocate stack frame 8 bytes.
     sw $ra, 4($sp) # Store return address into stack frame.
     addi $s0, $s0, 1 # Make cnt = cnt + 1;
-    li $t0, 1
-    bne $a0, $t0, L1 # If n != 0 then move line L1.
+    slti $t0, $a0, 1 # If $a0 < 1, store 1 at $t0. Else, store 0.
+    beq $t0, $zero, L1 # If $t0 != 0 then move line L1.
     # n == 0 case.
     li $v0, 0 # Make return value 0.
     addi $sp, $sp, 8 # Destroy stack frame.
     jr $ra # Make return to previous pc.
-L1: li $t0, 2
-    bne $a0, $t1, L2 # If n!= 1, then move line L2.
+L1: 
+    slti $t0, $a0, 2 # If $a0 < 2, store 1 at $t0. Else, store 0.
+    beq $t0, $zero, L2 # If $t0 != 0 then move line L1.
     # n == 1 case.
     li $v0, 1 # Make return value 1.
     addi $sp, $sp, 8 # Destroy stack frame.
