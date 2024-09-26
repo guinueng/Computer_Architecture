@@ -22,6 +22,7 @@ main:
 
     # Call fibonacci function
     jal fibonacci # Call fibonacci(n)
+    move $s1, $v0 # Move result to $s2 to store fibonacci number.
 
     # Print "Fibonacci number: "
     li $v0, 4 # syscall for print_string
@@ -29,15 +30,17 @@ main:
     syscall
 
     # Print fibonacci number
-    move $a0, $v0 # Move result to $a0 to print fibonacci number.
-    li $v0, 4 # syscall for print_string
+    move $a0, $s1 # Move result to $a0 to print fibonacci number.
+    li $v0, 1 # syscall for print_integer
     syscall
 
     # Print "The number of fibonacci function calls: "
+    li $v0, 4 # syscall for print_string
     la $a0, call_count # Load address of call_count
     syscall
 
     # Print number of fibonacci function calls
+    li $v0, 1 # syscall for print_integer
     move $a0, $s0
     syscall
 
