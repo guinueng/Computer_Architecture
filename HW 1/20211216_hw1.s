@@ -51,38 +51,46 @@ main:
     syscall
 
 fibonacci:
-    addi $sp, $sp, -8 # Allocate stack frame 8 bytes.
-    sw $ra, 4($sp) # Store return address into stack frame.
+    addi $sp, $sp, -12 # Allocate stack frame 12 bytes.
+    sw $ra, 8($sp) # Backup return address into stack frame.
+    sw $a0, 4($sp) # Backup assigned value into stack frame.
+    sw $s1, 0($sp) # Backup register $s1 value into stack frame.
+    # Backup $s1 due to we execute two recursion, and we store first recursion's value into $s1.
+
     addi $s0, $s0, 1 # Make cnt = cnt + 1;
     slti $t0, $a0, 1 # If $a0 < 1, store 1 at $t0. Else, store 0.
     beq $t0, $zero, L1 # If $t0 != 0 then move line L1.
     # n == 0 case.
     li $v0, 0 # Make return value 0.
-    addi $sp, $sp, 8 # Destroy stack frame.
+    lw $ra, 8($sp) # Restore return address to $ra.
+    lw $a0, 4($sp)
+    lw $s1, 0($sp)
+    addi $sp, $sp, 12 # Destroy stack frame.
     jr $ra # Make return to previous pc.
 L1: 
     slti $t0, $a0, 2 # If $a0 < 2, store 1 at $t0. Else, store 0.
     beq $t0, $zero, L2 # If $t0 != 0 then move line L1.
     # n == 1 case.
     li $v0, 1 # Make return value 1.
-    addi $sp, $sp, 8 # Destroy stack frame.
+    lw $ra, 8($sp) # Restore return address to $ra.
+    lw $a0, 4($sp)
+    lw $s1, 0($sp)
+    addi $sp, $sp, 12 # Destroy stack frame.
     jr $ra, # Make return to previous pc.
 L2: # n > 1 case.
     addi $a0, $a0, -1 # n = n - 1.
-    sw $a0, 0($sp) # Store argument into stack frame.
     jal fibonacci # Do recursive fibonacci(n-1).
-    lw $a0, 0($sp)
+    
     add $s1, $v0, $zero # Store result to register s1.
-    addi $sp, $sp, -4 # Increase stack frame 4 byte more.
-    sw $s1, 0($sp) # Backup register s1 value into stack.
     addi $a0, $a0, -1 # n = n - 1.
-    sw $a0, 4($sp) # Store argument into stack frame.
 
     jal fibonacci # Do recursive fibonacci(n-1).
-    lw $a0, 4($sp)
-    lw $s1, 0($sp)
+    
     add $s2, $v0, $zero # Store result to register s2.
     add $v0, $s1, $s2 # return value = fibonacci (n - 1) + fibonacci(n - 2)
+
     lw $ra, 8($sp) # Restore return address to $ra.
+    lw $a0, 4($sp)
+    lw $s1, 0($sp)
     addi $sp, $sp, 12 # Destroy stack frame.
     jr $ra # Return.
