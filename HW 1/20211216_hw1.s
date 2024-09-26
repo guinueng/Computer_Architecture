@@ -77,8 +77,10 @@ L2: # n > 1 case.
     sw $s1, 0($sp) # Backup register s1 value into stack.
     addi $a0, $a0, -1 # n = n - 1.
     sw $a0, 4($sp) # Store argument into stack frame.
+
     jal fibonacci # Do recursive fibonacci(n-1).
     lw $a0, 4($sp)
+    lw $s1, 0($sp)
     add $s2, $v0, $zero # Store result to register s2.
     add $v0, $s1, $s2 # return value = fibonacci (n - 1) + fibonacci(n - 2)
     lw $ra, 8($sp) # Restore return address to $ra.
