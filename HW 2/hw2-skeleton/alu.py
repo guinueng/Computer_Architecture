@@ -8,6 +8,31 @@ class ALU:
 
     #FIXME
     def operate(self, operation, operand1, operand2):
+        Ainvert = operation // 8
+        Binvert = operation // 4
+        Operation = operation % 4
+        A = operand1
+        B = operand2
+        if(Ainvert == 1): # Negating A
+            A *= -1
+        if(Binvert == 1): # Negating B
+            B *= -1
+
+        if(A + B == 0): # Check whether value is 0 or not.
+            Zero = 1
+        else:
+            Zero = 0
+
+        if(Operation == 0): # And gate
+            return {"result": A & B, "zero": Zero} # In python there exist bitwise and/or operation by using &/|.
+        elif (Operation == 1): # OR gate
+            return {"result": A | B, "zero": Zero} # Reference : https://docs.python.org/3.9/library/stdtypes.html?highlight=bitwise
+        elif(Operation == 2): # Add operation
+            return {"result": A + B, "zero": Zero}
+        elif(Operation == 3):
+            return {"result": A + B, "zero": Zero}
+
+
         """
         Perform ALU operation based on the operation code.
 

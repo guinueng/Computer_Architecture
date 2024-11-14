@@ -19,9 +19,9 @@ class CPU:
     #FIXME
     def run_cycle(self):
         # 1. Instruction Fetch Step.
-        instruction = self.memory.load_instructions() # Fetch instruction on inst. mem.
+        instruction = self.memory.read_instruction(self.pc) # Fetch instruction on inst. mem. based on current program counter value(which is current address).
         utils.print_instruction_fetch(self.pc, instruction)
-        print(instruction)
+        print("Instruction on decimal : ", instruction)
 
         # Need to Implement Instruction : lw, sw , beq, add, sub, and, or, slt, nor, addi
         # R type instruction (opcode is fixed w/ 0, funct code will be written here) : add (0x20), sub (0x22), and (0x24), or (0x25), slt (0x2a), nor (0x27)
@@ -29,8 +29,32 @@ class CPU:
 
         # 2. Instruction Decode Step.
         # First, we need to extract opcode part.
-        opcode = instruction / 2^6
-        print(opcode)
+        opcode = int(instruction / int(2 ** 26))
+        instruction %= (2 ** 26)
+        print("opcode for decimal : ", opcode)
+        print("opcode for hex : ", hex(opcode))
+
+        self.control.set_control_signals(opcode) # By decoded result, we need to set Control signal.
+
+        rs = int(instruction / int(2 ** 21)) # Decode necessary value(rs, rt value for both R, I type, rd, shamt, funct value for R type and sign_ex_num for I type.)
+        instruction %= (2 ** 21)
+        rt = int(instruction / int(2 ** 16))
+        instruction %= (2 ** 16)
+        rd = int(instruction / int(2** 11))
+        sign_ex_num = int(instruction)
+        instruction %= int(2 ** 11)
+        shamt = int(instruction / int(2 ** 6))
+        funct = int(instruction % int(2 ** 6))
+        print("R Instruction on decimal: ", opcode, rs, rt, rd, shamt, funct)
+        print("R Instruction on hex: ", hex(opcode), hex(rs), hex(rt), hex(rd), hex(shamt), hex(funct))
+        print("I Instruction on decimal: ", opcode, rs, rt, sign_ex_num)
+        print("I Instruction on hex: ", hex(opcode), hex(rs), hex(rt), hex(sign_ex_num))
+
+        if(opcode == 0): # R inst. case.
+            
+            # 3. Exec Step.
+        else:
+
 
 
 

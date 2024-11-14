@@ -12,6 +12,12 @@ class Control:
 
     #FIXME
     def set_control_signals(self, opcode):
+        if(opcode == 0): # R type instruction case.
+            self.signals = {
+                      "RegDst": 1, "ALUSrc": 0, "MemtoReg": 0, "RegWrite": 1,
+                      "MemRead": 0, "MemWrite": 0, "Branch": 0, "ALUOp": 2
+                  }
+
         """
         Sets main control signals based on the given opcode.
 
@@ -43,6 +49,8 @@ class Control:
 
     #FIXME
     def set_alu_signal(self, aluop, funct):
+        if()
+
         """
         Determines the ALU operation based on ALUOp and funct code.
 
