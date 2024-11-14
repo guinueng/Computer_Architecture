@@ -16,6 +16,8 @@ class RegisterFile:
 
     #FIXME
     def read(self, reg_num):
+        return self.registers[reg_num] # Return target register's value.
+
         """
         This function reads the value stored in the specified register.
 
@@ -33,6 +35,8 @@ class RegisterFile:
 
     #FIXME
     def write(self, reg_num, value):
+        self.registers[reg_num] = value # Update target register as given value.
+
         """
         This function writes a value to the specified register in
         self.registers.

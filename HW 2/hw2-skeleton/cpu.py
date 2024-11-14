@@ -18,6 +18,24 @@ class CPU:
 
     #FIXME
     def run_cycle(self):
+        # 1. Instruction Fetch Step.
+        instruction = self.memory.load_instructions() # Fetch instruction on inst. mem.
+        utils.print_instruction_fetch(self.pc, instruction)
+        print(instruction)
+
+        # Need to Implement Instruction : lw, sw , beq, add, sub, and, or, slt, nor, addi
+        # R type instruction (opcode is fixed w/ 0, funct code will be written here) : add (0x20), sub (0x22), and (0x24), or (0x25), slt (0x2a), nor (0x27)
+        # I type instruction (opcode) : lw (0x23), sw (0x2b), beq (0x4), addi (8)
+
+        # 2. Instruction Decode Step.
+        # First, we need to extract opcode part.
+        opcode = instruction / 2^6
+        print(opcode)
+
+
+
+        self.pc += 4 # Update PC value at the end of cycle.
+
         """
         Implement the cycle steps by using the self.pc, self.alu, self.control,
         self.memory, and self.register_file objects.

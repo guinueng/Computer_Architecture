@@ -28,8 +28,9 @@ class Memory:
         return data_memory
 
     def read_instruction(self, address):
+        return self.instruction_memory[address] # Return instruction memory value.
         """
-        Read (fetch) an instruction form instruction_memroy.
+        Read (fetch) an instruction form instruction_memory.
 
         Parameters:
             - address (int): The address to read the value from.
@@ -43,6 +44,7 @@ class Memory:
         """
 
     def read_data(self, address):
+        return self.data_memory[address] # Return target data memory's value.
         """
         Read data from data_memory.
 
@@ -58,6 +60,8 @@ class Memory:
         """
 
     def write_data(self, address, value):
+        self.data_memory[address] = value # Update target data memory by given value.
+
         """
         Write data to data_memory.
 
