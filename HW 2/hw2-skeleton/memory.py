@@ -28,7 +28,10 @@ class Memory:
         return data_memory
 
     def read_instruction(self, address):
-        return self.instruction_memory[address] # Return instruction memory value.
+        data = self.instruction_memory.get(address)
+        if(data is None or address < 0 or address > 32): # If address is out of word size or does not exist data, regard it as invalid memory access.
+            utils.handle_invalid_memory_access()
+        return data # Return instruction memory value.
 
         """
         Read (fetch) an instruction form instruction_memory.
@@ -41,7 +44,10 @@ class Memory:
         """
 
     def read_data(self, address):
-        return self.data_memory[address] # Return target data memory's value.
+        data = self.data_memory.get(address)
+        if(data is None or address < 0 or address > 32): # If address is out of word size or does not exist data, regard it as invalid memory access.
+            utils.handle_invalid_memory_access()
+        return data # Return target data memory's value.
 
         """
         Read data from data_memory.
@@ -54,6 +60,8 @@ class Memory:
         """
 
     def write_data(self, address, value):
+        if(self.data_memory.get(address) is None or address < 0 or address > 32): # If address is out of word size or does not exist data, regard it as invalid memory access.
+            utils.handle_invalid_memory_access()
         self.data_memory[address] = value # Update target data memory by given value.
 
         """

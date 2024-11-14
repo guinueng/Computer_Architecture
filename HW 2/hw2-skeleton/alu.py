@@ -7,8 +7,8 @@ class ALU:
         pass
 
     def operate(self, operation, operand1, operand2):
-        Ainvert = operation // 8 # Can get quotient value by using //. Did not need to use int(operation / 8) like that.
-        Binvert = operation // 4 # Reference : https://docs.python.org/3.9/library/decimal.html?highlight=quotient
+        Ainvert = int(operation // 8) # Can get quotient value by using //.
+        Binvert = int(operation // 4) # Reference : https://docs.python.org/3.9/library/decimal.html?highlight=quotient
         Operation = operation % 4 # Extract A invert, B invert and operation information from given 4bit operation code.
         A = operand1
         B = operand2

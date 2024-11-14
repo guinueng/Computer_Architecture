@@ -15,7 +15,9 @@ class RegisterFile:
         return registers
 
     def read(self, reg_num):
-        return self.registers['$' + str(reg_num)] # Return target register's value.
+        if(reg_num < 0 or reg_num > 32 or self.registers.get('$' + str(reg_num)) is None):
+            utils.handle_invalid_register_access()
+        return self.registers.get('$' + str(reg_num)) # Return target register's value.
         # Due to register number has ${num} notation, we need to concatenate $ sign in front of reg_num.
 
         """
@@ -30,6 +32,8 @@ class RegisterFile:
         """
 
     def write(self, reg_num, value):
+        if(reg_num < 0 or reg_num > 32 or self.registers.get('$' + str(reg_num)) is None):
+            utils.handle_invalid_register_access()
         self.registers['$' + str(reg_num)] = value # Update target register as given value.
 
         """
