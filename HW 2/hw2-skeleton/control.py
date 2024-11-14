@@ -10,13 +10,34 @@ class Control:
         }
         self.alu_signal = 0
 
-    #FIXME
     def set_control_signals(self, opcode):
         if(opcode == 0): # R type instruction case.
             self.signals = {
                       "RegDst": 1, "ALUSrc": 0, "MemtoReg": 0, "RegWrite": 1,
-                      "MemRead": 0, "MemWrite": 0, "Branch": 0, "ALUOp": 2
+                      "MemRead": 0, "MemWrite": 0, "Branch": 0, "ALUOp": 0b10
                   }
+        elif(opcode == 0x23): # lw instruction case.
+            self.signals = {
+                      "RegDst": 0, "ALUSrc": 1, "MemtoReg": 1, "RegWrite": 1,
+                      "MemRead": 1, "MemWrite": 0, "Branch": 0, "ALUOp": 0b00
+                  }
+        elif(opcode == 0x2b): # sw instruction case.
+            self.signals = {
+                      "RegDst": None, "ALUSrc": 1, "MemtoReg": None, "RegWrite": 0,
+                      "MemRead": 0, "MemWrite": 1, "Branch": 0, "ALUOp": 0b00
+                  }
+        elif(opcode == 0x4): # beq instruction case.
+            self.signals = {
+                      "RegDst": None, "ALUSrc": 0, "MemtoReg": None, "RegWrite": 0,
+                      "MemRead": 0, "MemWrite": 0, "Branch": 1, "ALUOp": 0b01
+                  }
+        elif(opcode == 0x8): # addi instruction case.
+            self.signals = {
+                      "RegDst": 0, "ALUSrc": 1, "MemtoReg": None, "RegWrite": 1,
+                      "MemRead": 0, "MemWrite": 0, "Branch": 0, "ALUOp": 0b00
+                  }
+        else:
+            utils.handle_invalid_opcode() # If invalid opcode given, handle it by using utils function.
 
         """
         Sets main control signals based on the given opcode.
@@ -41,15 +62,30 @@ class Control:
 
         Returns:
             None
-
-        /*************************************************/
-        /********************* FIXME *********************/
-        /*************************************************/
         """
 
-    #FIXME
+        # R type instruction (opcode is fixed w/ 0, funct code will be written here) : add (0x20), sub (0x22), and (0x24), or (0x25), slt (0x2a), nor (0x27)
+        # I type instruction (opcode) : lw (0x23), sw (0x2b), beq (0x4), addi (0x8)
     def set_alu_signal(self, aluop, funct):
-        if()
+        if(aluop == 0b10): # ALUOP R-type instruction case.
+            if(funct == 0x20): # FUNCT add case.
+                self.alu_signal = 0b0010
+            elif(funct == 0x22): # Sub case.
+                self.alu_signal = 0b0110
+            elif(funct == 0x24): # And case.
+                self.alu_signal = 0b0000
+            elif(funct == 0x25): # Or case.
+                self.alu_signal = 0b0001
+            elif(funct == 0x2a): # Slt case.
+                self.alu_signal = 0b0111
+            elif(funct == 0x27): # Nor case.
+                self.alu_signal = 0b1100
+            else:  # If invalid funct given, handle it by using utils function.
+                utils.handle_invalid_funct()
+        elif(aluop == 0b00): # ALUOP 00 case. (lw, sw, addi)
+            self.alu_signal = 0b0010
+        elif(aluop == 0b01): # ALUOp 01 case. (beq)
+            self.alu_signal = 0b0110
 
         """
         Determines the ALU operation based on ALUOp and funct code.
@@ -65,10 +101,6 @@ class Control:
 
         Returns:
             None
-
-        /*************************************************/
-        /********************* FIXME *********************/
-        /*************************************************/
         """
 
     # do not modify this function

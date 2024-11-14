@@ -14,7 +14,6 @@ class RegisterFile:
                 registers[reg] = int(value, 16)
         return registers
 
-    #FIXME
     def read(self, reg_num):
         return self.registers['$' + str(reg_num)] # Return target register's value.
         # Due to register number has ${num} notation, we need to concatenate $ sign in front of reg_num.
@@ -28,13 +27,8 @@ class RegisterFile:
         Returns:
             - The value stored in the specified register in self.registers
               (int)
-
-        /*************************************************/
-        /********************* FIXME *********************/
-        /*************************************************/
         """
 
-    #FIXME
     def write(self, reg_num, value):
         self.registers['$' + str(reg_num)] = value # Update target register as given value.
 
@@ -48,10 +42,6 @@ class RegisterFile:
 
         Returns:
             None
-
-        /*************************************************/
-        /********************* FIXME *********************/
-        /*************************************************/
         """
 
     # do not modify this function

@@ -15,8 +15,6 @@ class CPU:
         self.memory = Memory(inst_file, data_file)
         self.register_file = RegisterFile(reg_file)
 
-
-    #FIXME
     def run_cycle(self):
         # 1. Instruction Fetch Step.
         instruction = self.memory.read_instruction(self.pc) # Fetch instruction on inst. mem. based on current program counter value(which is current address).
@@ -25,7 +23,7 @@ class CPU:
 
         # Need to Implement Instruction : lw, sw , beq, add, sub, and, or, slt, nor, addi
         # R type instruction (opcode is fixed w/ 0, funct code will be written here) : add (0x20), sub (0x22), and (0x24), or (0x25), slt (0x2a), nor (0x27)
-        # I type instruction (opcode) : lw (0x23), sw (0x2b), beq (0x4), addi (8)
+        # I type instruction (opcode) : lw (0x23), sw (0x2b), beq (0x4), addi (0x8)
 
         # 2. Instruction Decode Step.
         # First, we need to extract opcode part.
@@ -36,29 +34,33 @@ class CPU:
 
         self.control.set_control_signals(opcode) # By decoded result, we need to set Control signal.
 
-        rs = int(instruction / int(2 ** 21)) # Decode necessary value(rs, rt value for both R, I type, rd, shamt, funct value for R type and sign_ex_num for I type.)
+        rs = instruction // (2 ** 21) # Decode necessary value(rs, rt value for both R, I type, rd, shamt, funct value for R type and sign_ex_num for I type.)
         instruction %= (2 ** 21)
-        rt = int(instruction / int(2 ** 16))
+        rt = instruction / (2 ** 16)
         instruction %= (2 ** 16)
-        rd = int(instruction / int(2** 11))
-        sign_ex_num = int(instruction)
-        instruction %= int(2 ** 11)
-        shamt = int(instruction / int(2 ** 6))
-        funct = int(instruction % int(2 ** 6))
+        rd = instruction / (2** 11)
+        sign_ex_num = instruction
+        instruction %= 2 ** 11
+        shamt = instruction // (2 ** 6)
+        funct = instruction % (2 ** 6)
         print("R Instruction on decimal: ", opcode, rs, rt, rd, shamt, funct)
         print("R Instruction on hex: ", hex(opcode), hex(rs), hex(rt), hex(rd), hex(shamt), hex(funct))
         print("I Instruction on decimal: ", opcode, rs, rt, sign_ex_num)
         print("I Instruction on hex: ", hex(opcode), hex(rs), hex(rt), hex(sign_ex_num))
 
         if(opcode == 0): # R inst. case.
-            
+            pass
             # 3. Exec Step.
         else:
+            pass
 
 
 
-
-        self.pc += 4 # Update PC value at the end of cycle.
+        # 6. Update PC value at the end of cycle.
+        if(self.control.get_signal("Branch") == 1): # If branch is occured,
+            pass # Need to update pc value by branch destination.
+        else:
+            self.pc += 4 # Else, update PC value by adding 4.
 
         """
         Implement the cycle steps by using the self.pc, self.alu, self.control,
@@ -76,10 +78,6 @@ class CPU:
 
         Returns:
             None
-
-        /*************************************************/
-        /********************* FIXME *********************/
-        /*************************************************/
         """
 
     # do not modify this function
