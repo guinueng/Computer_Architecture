@@ -19,6 +19,8 @@ class RegisterFile:
             utils.handle_invalid_register_access()
         return self.registers.get('$' + str(reg_num)) # Return target register's value.
         # Due to register number has ${num} notation, we need to concatenate $ sign in front of reg_num.
+        # Similarly, I used get function to get register value in register tuple to make sure we fetch value safely,
+        # due to if non exist key value inputted, it returns None.
 
         """
         This function reads the value stored in the specified register.
@@ -35,6 +37,7 @@ class RegisterFile:
         if(reg_num < 0 or reg_num > 32 or self.registers.get('$' + str(reg_num)) is None):
             utils.handle_invalid_register_access()
         self.registers['$' + str(reg_num)] = value # Update target register as given value.
+        # But, if we want to modify or add value into tuples, we need to directly access tuple by using key.
 
         """
         This function writes a value to the specified register in

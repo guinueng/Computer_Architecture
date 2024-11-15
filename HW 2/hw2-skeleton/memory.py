@@ -28,7 +28,9 @@ class Memory:
         return data_memory
 
     def read_instruction(self, address):
-        data = self.instruction_memory.get(address)
+        data = self.instruction_memory.get(address) # To safely access python tuples, we need to utilize get function.
+        # If we directly access tuple by using non exist key, we can get error.
+        # But, if we utilize get function, and target key does not exist, it returns None so we can find it is invalid memory area.
         if(data is None or address < 0 or address > 32): # If address is out of word size or does not exist data, regard it as invalid memory access.
             utils.handle_invalid_memory_access()
         return data # Return instruction memory value.
@@ -63,6 +65,7 @@ class Memory:
         if(self.data_memory.get(address) is None or address < 0 or address > 32): # If address is out of word size or does not exist data, regard it as invalid memory access.
             utils.handle_invalid_memory_access()
         self.data_memory[address] = value # Update target data memory by given value.
+        # But, if we want to modify value or add value, we need to directly access that tuples.
 
         """
         Write data to data_memory.

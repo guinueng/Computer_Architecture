@@ -13,28 +13,28 @@ class Control:
     def set_control_signals(self, opcode):
         if(opcode == 0): # R type instruction case.
             self.signals = {
-                      "RegDst": 1, "ALUSrc": 0, "MemtoReg": 0, "RegWrite": 1,
-                      "MemRead": 0, "MemWrite": 0, "Branch": 0, "ALUOp": 0b10
+                "RegDst": 1, "ALUSrc": 0, "MemtoReg": 0, "RegWrite": 1,
+                "MemRead": 0, "MemWrite": 0, "Branch": 0, "ALUOp": 0b10
             }
         elif(opcode == 0x23): # lw instruction case.
             self.signals = {
-                      "RegDst": 0, "ALUSrc": 1, "MemtoReg": 1, "RegWrite": 1,
-                      "MemRead": 1, "MemWrite": 0, "Branch": 0, "ALUOp": 0b00
+                "RegDst": 0, "ALUSrc": 1, "MemtoReg": 1, "RegWrite": 1,
+                "MemRead": 1, "MemWrite": 0, "Branch": 0, "ALUOp": 0b00
             }
         elif(opcode == 0x2b): # sw instruction case.
             self.signals = {
-                      "RegDst": None, "ALUSrc": 1, "MemtoReg": None, "RegWrite": 0,
-                      "MemRead": 0, "MemWrite": 1, "Branch": 0, "ALUOp": 0b00
+                "RegDst": None, "ALUSrc": 1, "MemtoReg": None, "RegWrite": 0,
+                "MemRead": 0, "MemWrite": 1, "Branch": 0, "ALUOp": 0b00
             }
         elif(opcode == 0x4): # beq instruction case.
             self.signals = {
-                      "RegDst": None, "ALUSrc": 0, "MemtoReg": None, "RegWrite": 0,
-                      "MemRead": 0, "MemWrite": 0, "Branch": 1, "ALUOp": 0b01
+                "RegDst": None, "ALUSrc": 0, "MemtoReg": None, "RegWrite": 0,
+                "MemRead": 0, "MemWrite": 0, "Branch": 1, "ALUOp": 0b01
             }
         elif(opcode == 0x8): # addi instruction case.
             self.signals = {
-                      "RegDst": 0, "ALUSrc": 1, "MemtoReg": 0, "RegWrite": 1,
-                      "MemRead": 0, "MemWrite": 0, "Branch": 0, "ALUOp": 0b00
+                "RegDst": 0, "ALUSrc": 1, "MemtoReg": 0, "RegWrite": 1,
+                "MemRead": 0, "MemWrite": 0, "Branch": 0, "ALUOp": 0b00
             }
         else:
             utils.handle_invalid_opcode() # If invalid opcode given, handle it by using utils function.
