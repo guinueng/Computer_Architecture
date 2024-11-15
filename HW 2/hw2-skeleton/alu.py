@@ -15,9 +15,6 @@ class ALU:
         A = operand1 # Initialize A and B value as given operands.
         B = operand2
 
-        # print("given hex value: ", hex(A), hex(B))
-        # print("given value: ", A, B)
-
         if(((A & 0x80000000) >> 31) == 0b1): # In python, all integer to hex value is treated as unsigned one.
             A = (-1) * (A ^ 0xffffffff) + 1 # So if we want to use negative hex number as negative integer, we need to convert as manually.
             # In two's complement, finding corresponding opposite sign number equals negate target number + 1.
@@ -28,35 +25,25 @@ class ALU:
         if(((B & 0x80000000) >> 31) == 0b1): # Same property as above but treating B.
             B = (-1) * (A ^ 0xffffffff) + 1
 
-        # print("Inverted 1 hex VALUE: ", hex(A), hex(B))
-        # print("Inverted 1 VALUE: ", A, B)
-
         A = (operand1 & 0x7ffffffff) # Delete sign bit of A.
         B = (operand2 & 0x7ffffffff) # Delete sign bit of B.
 
         if(Ainvert == 1): # Negating A based on ALUControl signal.
-            A = (-1) * A - 1
-            #A = (A ^ 0xffffffff)
+            A = ((-1) * A) - 1 # First, I want to use xor operation to pursue not operation, but it makes error due to integer overflow.
+            #A = (A ^ 0xffffffff) # Thus, changed method by making value negative by multiplying (-1) and subtracted 1 which is same as not operation.
         if(Binvert == 1): # Negating B based on ALUControl signal.
-            B = (-1) * B - 1
+            B = ((-1) * B) - 1 # Similar happened in B case when negate is signalled.
             #B = (B ^ 0xffffffff)
 
-        # print("Inverted 2 hex VALUE: ", hex(A), hex(B))
-        # print("Inverted 2 VALUE: ", A, B)
-
-        if(Ainvert == 1 and Operation == 0b10):
+        if(Ainvert == 1 and Operation == 0b10): # In subtraction is executed (which subtraction case or set on less than case),
             A += 1
-        if(Ainvert == 1 and Operation == 0b11):
+        if(Ainvert == 1 and Operation == 0b11): # 1 is added to target number by utilizing Carry In is added in the value.
             A += 1
         if(Binvert == 1 and Operation == 0b10):
             B += 1
         if(Binvert == 1 and Operation == 0b11):
             B += 1
         calc_result = A + B # Calculate A + B for add operation and slt operation.
-
-        # print("Inverted 3 hex VALUE: ", hex(A), hex(B))
-        # print("Inverted 3 VALUE: ", A, B)
-        # print("Calc rst: ", calc_result)
 
         if(calc_result == 0): # Check whether calculated value is 0 or not.
             Zero = 1 # By calc result, trigger Zero signal or not.
@@ -71,8 +58,6 @@ class ALU:
             A = 0xffffffff + A + 1
         if(B < 0):
             B = 0xffffffff + B + 1
-
-        # print("Final VALUE: ", hex(A), hex(B))
 
         if(Operation == 0b00): # And gate
             return {"result": A & B, "zero": Zero} # In python there exist bitwise and/or operation by using &/|. And and and or operation returns and|or operated value.
