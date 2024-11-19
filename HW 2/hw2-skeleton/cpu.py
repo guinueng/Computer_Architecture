@@ -55,14 +55,14 @@ class CPU:
         result = self.alu.operate(self.control.get_alu_signal(), rs_value, B) # Execute ALU by signal from ALU Control, rs register value, and selected value from mux.
         
         if(self.control.get_alu_signal() == 0b0010): # Checking overflow of during add calculation on ALU.
-            if(rs_value > 0 and B > 0 and ((result["result"] & 0x80000000) >> 31) == 1): # Overflow occurred by pos + pos num = neg case.
+            if(rs_value > 0 and B > 0 and ((result[0] & 0x80000000) >> 31) == 1): # Overflow occurred by pos + pos num = neg case.
                 utils.handle_overflow()
-            if(rs_value < 0 and B < 0 and ((result["result"] & 0x80000000) >> 31) == 0): # Overflow occurred by neg + neg num = pos case.
+            if(rs_value < 0 and B < 0 and ((result[0] & 0x80000000) >> 31) == 0): # Overflow occurred by neg + neg num = pos case.
                 utils.handle_overflow()
         if(self.control.get_alu_signal() == 0b0110): # Checking overflow of during sub calculation on ALU.
-            if(rs_value > 0 and B < 0 and ((result["result"] & 0x80000000) >> 31) == 1): # Overflow occurred by pos - neg num = neg case.
+            if(rs_value > 0 and B < 0 and ((result[0] & 0x80000000) >> 31) == 1): # Overflow occurred by pos - neg num = neg case.
                 utils.handle_overflow()
-            if(rs_value < 0 and B > 0 and ((result["result"] & 0x80000000) >> 31) == 1): # Overflow occurred by neg - pos num = pos case.
+            if(rs_value < 0 and B > 0 and ((result[0] & 0x80000000) >> 31) == 1): # Overflow occurred by neg - pos num = pos case.
                 utils.handle_overflow()
 
         # 3-1. Branch Addr calc step for some I type instruction case. (beq inst. case.)
@@ -73,15 +73,15 @@ class CPU:
 
         # 4. Data Memory Fetch Step.
         if(self.control.get_signal("MemRead") == 1): # If MemRead sig == 1, we need to read data memory based on calculated effective address by alu.
-            mem_read_data = self.memory.read_data(result.get("result"))
+            mem_read_data = self.memory.read_data(result[0])
 
         if(self.control.get_signal("MemWrite") == 1): # If MemWrite == 1, we need to write data into data memory based on calculated effective address by alu.
-            self.memory.write_data(result.get("result"), rt_value)
+            self.memory.write_data(result[0], rt_value)
 
         if(self.control.get_signal("MemtoReg") == 1): # Select reg write data by using MemtoReg signal as utilizing mux.
             reg_w_data = mem_read_data # If MemtoReg value is 1, set register write value as read value from data memory.
         else: # If MemtoReg signal is 0, set reg write data as calculated result of ALU.
-            reg_w_data = result.get("result")
+            reg_w_data = result[0]
 
         # 5. Register Write Back step.
         if(self.control.get_signal("RegWrite") == 1): # If RegWrite signal is 1, we write reg write data into target register.
@@ -92,7 +92,7 @@ class CPU:
                 self.register_file.write(rd, reg_w_data)
 
         # 6. Update PC value at the end of cycle.
-        if(self.control.get_signal("Branch") == 1 and result.get("zero") == 1): # If branch signal is occured as 1,
+        if(self.control.get_signal("Branch") == 1 and result[1] == 1): # If branch signal is occured as 1,
             # and branch condition which is zero (only considering beq on this hw case) has occured,
             self.pc += (4 + target_branch_addr) # Need to update pc value by target branch destination.
         else:

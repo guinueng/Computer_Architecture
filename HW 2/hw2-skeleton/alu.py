@@ -60,16 +60,16 @@ class ALU:
             B = 0xffffffff + B + 1
 
         if(Operation == 0b00): # And gate
-            return {"result": A & B, "zero": Zero} # In python there exist bitwise and/or operation by using &/|. And and and or operation returns and|or operated value.
+            return ((A & B), Zero) # In python there exist bitwise and/or operation by using &/|. And and and or operation returns and|or operated value.
         elif (Operation == 0b01): # OR gate
-            return {"result": A | B, "zero": Zero} # Reference : https://docs.python.org/3.9/library/stdtypes.html?highlight=bitwise
+            return ((A | B), Zero) # Reference : https://docs.python.org/3.9/library/stdtypes.html?highlight=bitwise
         elif(Operation == 0b10): # Add operation returns calc result.
-            return {"result": calc_result, "zero": Zero}
+            return (calc_result, Zero)
         elif(Operation == 0b11): # Set on less than operation
             if(((calc_result & (0x80000000)) >> 31) == 0b1): # If calculated value's MSB is 1 which denotes sign bit is 1, it is negative number.
-                return {"result": 1, "zero": Zero} # If two subtracted value is negative, we can consider A value is smaller than B value, thus return 1.
+                return (1, Zero) # If two subtracted value is negative, we can consider A value is smaller than B value, thus return 1.
             else: # Else, we can regard A value is same or bigger than B, so we would return value 0.
-                return {"result": 0, "zero": Zero}
+                return (0, Zero)
 
         """
         Perform ALU operation based on the operation code.
